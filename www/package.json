@@ -4,10 +4,9 @@
   "description": "Frontend for django app",
   "main": "index.js",
   "scripts": {
-    "install-node": "nvm install 14",
-    "dev": "nvm use 14 && SET NODE_OPTIONS=--openssl-legacy-provider && next -p 4000",
-    "build": "nvm use 14 && SET NODE_OPTIONS=--openssl-legacy-provider && next build",
-    "start": "nvm use 14 && SET NODE_OPTIONS=--openssl-legacy-provider && next start",
+    "dev": "set SET NODE_OPTIONS=--openssl-legacy-provider && next -p 4000",
+    "build": "set SET NODE_OPTIONS=--openssl-legacy-provider && next build",
+    "start": "set SET NODE_OPTIONS=--openssl-legacy-provider && next start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
