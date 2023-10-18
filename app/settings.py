@@ -7,7 +7,8 @@ import environ
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 env = environ.Env(
-    ON_SERVER=(bool, True), LOGGING_LEVEL=(str, "INFO"), DEBUG=(bool,True),SECRET_KEY=os.environ.get("SECRET_KEY")
+    ON_SERVER=(bool, True), LOGGING_LEVEL=(str, "INFO"), DEBUG=(bool,True),SECRET_KEY=os.environ.get("SECRET_KEY"),
+    DATABASE_URL= (str,os.environ.get("SECRET_KEY","sqlite:///db.db"))
 )
 IGNORE_DOT_ENV_FILE = env.bool("IGNORE_DOT_ENV_FILE", default=False)
 if not IGNORE_DOT_ENV_FILE:
@@ -99,13 +100,9 @@ WSGI_APPLICATION = "app.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-DATABASE_URL= os.environ.get("DATABASE_URL")
+
 DATABASES = {
-    # "default": env.db(),
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
-    }
+    "default": env.db()
 }
 
 # Password validation
