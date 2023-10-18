@@ -23,8 +23,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of your Django project into the container
 COPY . /app/
 
+# # Run database migrations before starting the server
+# RUN python manage.py migrate
+
 # Expose the port your Django app will run on
-EXPOSE 4001
+EXPOSE 80
 
 # Start the Django development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:4001"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:80"]
