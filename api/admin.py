@@ -10,3 +10,7 @@ User = get_user_model()
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
     pass
+
+@admin.register(models.ExtractedData)
+class ExtractedDataAdmin(admin.ModelAdmin):
+    pass

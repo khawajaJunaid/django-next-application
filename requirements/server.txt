@@ -9,3 +9,4 @@ pypdf
 pytesseract==0.3.4
 opencv-python
 pillow
+PyPDF2

@@ -51,7 +51,7 @@ pip-delete-this-directory.txt
 *.pyc
 
 # Ignore migration files (database schema changes)
-**/migrations/
+
 
 # Ignore user-uploaded files (modify as needed)
 uploads/
