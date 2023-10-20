@@ -17,6 +17,9 @@ import cv2
 import re
 import PyPDF2
 import traceback
+import shutil
+import os
+
 from PyPDF2.errors import PdfReadError
 
 class UploadPDFForm(forms.Form):
@@ -65,6 +68,24 @@ def extract_employee_details(text):
         "Address": employee_address,
         "Wages": income
     }
+
+def clear_images_directory():
+    images_directory = '/app/images'  # Provide the correct path to your images directory
+    try:
+        if os.path.exists(images_directory):
+            for item in os.listdir(images_directory):
+                item_path = os.path.join(images_directory, item)
+                if os.path.isfile(item_path):
+                    os.remove(item_path)  # Remove individual files
+                elif os.path.isdir(item_path):
+                    shutil.rmtree(item_path)  # Remove subdirectories and their contents
+            print(f"Contents of images directory '{images_directory}' cleared.")
+        else:
+            print(f"Images directory '{images_directory}' does not exist.")
+    except Exception as error:
+        print(f"Error while clearing images directory: {error}")
+
+
 
 def extract_text_from_pdf(pdf_file_path):
     try:
@@ -167,6 +188,8 @@ def extract_pdf_data(request):
     except Exception as error:
         # return JsonResponse({'error': f'Invalid request with error {error}'}, status=400)
         raise error
+    finally:
+        clear_images_directory()
 class Profile(generics.RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = serializers.User
