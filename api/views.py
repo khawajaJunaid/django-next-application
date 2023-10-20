@@ -74,7 +74,9 @@ def extract_text_from_pdf(pdf_file_path):
         extracted_text = ""
         for i, page_image in enumerate(pdf_images):
             image_path = f'/app/images/page_{i + 1}.jpg'
+            page_image.save(image_path, 'JPEG')
             img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+            
             # Apply adaptive thresholding
             img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
                                 cv2.THRESH_BINARY_INV, 11, 2)
