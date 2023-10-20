@@ -1,112 +1,92 @@
-# nextjs-django-boilerplate
 
-A barebones example of a Next.js SPA backed by a Django API.
 
-Includes the following:
+# 📑 W2 PDF Extractor
 
-Backend:
+A web application that allows users to 🚀 upload their W2 PDF document and ✨ automatically extracts details such as name, address, and income using Optical Character Recognition (OCR).
 
-- Django
-- Django REST Framework
-- JWT Authentication
+## 🛠️ Technology Stack:
 
-Frontend:
+### Backend:
 
-- Next.js
-- Tailwind
+- 🐍 Django
+- 🛰️ Django REST Framework
+- 🗝️ JWT Authentication
 
-## Setting up the backend API
+### Frontend:
 
-Create and activate a virtualenv:
+- ⚡ Next.js
+- 🎨 Tailwind
 
-```
-$ python3 -m venv .venv
-$ source .venv/bin/activate
-```
+## 🔧 Setting Up
 
-Install Python requirements:
+This project leverages two separate technology stacks for backend and frontend. Let's get started!
 
-```
-$ pip install -r requirements/base.txt
-```
+### 🏗️ Backend 
 
-Configure the Django environment:
+Setting up the Django backend is a breeze 🌬️! Thanks to containerization, we just need **Docker** to spin up our server.
 
-- Rename the sample environment file to `.env`:
+1. First, ensure you've installed **Docker**.
+2. Build the docker container:
+    ```bash 
+    $ docker build -t <django-app-name> .
     ```
-    $ mv .env.sample .env
+3. Run the server:
+    ```bash
+    $ docker run -p 4001:80 <django-app-name> 
     ```
-- Edit the `.env` file and provide a value for `SECRET_KEY`
 
-Set up the DB (uses sqlite by default):
+**Backend Config Vars**:
+- SECRET_KEY: (Refer to Django documentation)
+- DATABASE_URL: Set automatically when Postgres is added.
+- CORS_ORIGIN_REGEX_WHITELIST: A comma-separated list of origins. This should include the URL that the Next.js app gets deployed to.
+- IGNORE_DOT_ENV_FILE=on
 
-```
-$ python manage.py makemigrations api
-$ python manage.py migrate
-```
+To check if the server is up and running, visit **http://localhost:4001** in your browser.
 
-### Running the API locally
+### 🌐 Frontend
 
-```
-$ python manage.py runserver 4001
-```
+For running the frontend client on your local machine:
 
-The API is now running at http://localhost:4001
+**Note**: Before running any npm command to install node modules, ensure the node version on your local machine is **14.x**. This can be achieved via `nvm`, a node version manager.
 
-## Setting up the frontend UI
+**Frontend Config Vars**:
+- `NEXT_PUBLIC_API_HOST=<backend_url>` (e.g., http://localhost:4001)
 
-In a new shell instance, switch to the `www` folder and install JavaScript dependencies:
-
-```
-$ cd www
-$ npm install
+Navigate to the root folder for our frontend client:
+```bash
+cd www
 ```
 
-### Running the UI locally
-
-```
-$ npm run dev
-```
-
-The UI is now running. Visit http://localhost:4000 in your browser.
-
-## Running tests
-
-```
-$ python manage.py test
+Install the necessary modules:
+```bash
+npm i 
 ```
 
-## Deployment
+To run the client in development mode:
+```bash
+npm run dev
+```
 
-Below is a quick overview on deploying the app to Heroku and Vercel.
+This will start the frontend client on [http://localhost:3000](http://localhost:3000).
 
-### Notes on securing cookies
+### 📖 OCR Details
 
-This project is configured so that the Next.js app and Django API are deployed separately. Whether they are deployed to different subdomains on the same second level domain (so something like Next.js -> www.example.com, Django -> api.example.com) or completely separate domains will affect how the refresh token cookie settings should be configured. This is because the former configuration results in [requests that are considered same-site](https://security.stackexchange.com/questions/223473/for-samesite-cookie-with-subdomains-what-are-considered-the-same-site) which allows us to set the SameSite attribute in the cookie to Lax. Otherwise, we need to set the SameSite to None.
+For Optical Character Recognition, this application utilizes **pytesseract**. We've employed specific configurations to efficiently parse images, especially those with a tabular structure. This ensures precise extraction of data from the W2 PDF documents.
+
+## 🚀 Deployment
 
 ### Backend
 
-To deploy the backend on Heroku:
-
-1. Create a new app on Heroku
-2. Add Heroku Postgres
-3. Connect the app to your github repo
-4. Update the config variables (see below)
-5. On the Deploy tab in Heroku, trigger a deploy manually from Github (or switch on automatic deploys if you want).
-
-#### Backend config vars
-
-- `SECRET_KEY`: see Django docs
-- `DATABASE_URL`: set automatically when Postgres is added
-- `CORS_ORIGIN_REGEX_WHITELIST`: A comma-separated list of origins ([ref](https://github.com/adamchainz/django-cors-headers#cors_origin_whitelist)). This should include the URL that the Next.js app gets deployed to (see below).
-- `IGNORE_DOT_ENV_FILE=on`
+The Django backend is deployed to a serverless app service provided by Azure. This deployment is configured on the master branch. After a successful merge into master, a GitHub workflow runs, deploying the backend service via a Dockerfile to Azure.
 
 ### Frontend
 
-To deploy the frontend on Vercel:
+Vercel handles the frontend deployment. It runs a deployment on all branches, but only the master branch deployment has access to the Azure app service, enforced by CORS whitelisting for the Vercel host.
 
-1. Click "Import Project"
-2. Enter the URL of your github repo
+**Steps to Deploy Frontend on Vercel**:
+
+1. Click "Import Project".
+2. Enter the URL of your GitHub repo.
 3. Select the `www` subdirectory.
-4. Add the `NEXT_PUBLIC_API_HOST` env var with the value set to the URL the Django API gets deployed to
-5. Complete the build
+4. Add the `NEXT_PUBLIC_API_HOST` environment variable set to the Django API's deployment URL.
+5. Complete the build.
