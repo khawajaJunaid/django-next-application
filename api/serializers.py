@@ -3,13 +3,15 @@ from rest_framework import serializers
 from rest_framework_simplejwt import serializers as jwt_serializers
 from rest_framework_simplejwt.settings import api_settings as jwt_settings
 from rest_framework_simplejwt.tokens import RefreshToken
-
 from . import models
 
 class FileUploadSerializer(serializers.Serializer):
     file = serializers.FileField()
     
-
+class ExtractedDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ExtractedData
+        fields = ('id', 'user', 'name', 'address', 'income')
 
 class User(serializers.ModelSerializer):
     class Meta:
